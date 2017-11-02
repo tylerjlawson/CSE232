@@ -14,6 +14,8 @@ using std::ifstream;
 using std::ostream; 
 #include <iomanip>
 using std::setprecision;//for output
+#include<algorithm>
+using std::sort;
 #include <sstream> //for string stuff
 using std::stringstream; using std::fixed;
 #include<math.h>//for exponents
@@ -77,20 +79,23 @@ map<vector<double>, string> k_neighbors(const map<vector<double>, string> &m, co
 	//gets new map with k nearest
 	map<vector<double>, string> new_map;
 	map<vector<double>, string> map_copy=m;
-	map<double, vector<double>> dm;
+	vector<double> distances;
+	//map<vector<double>, double> dm;
 
 	for (auto element : m){//distance map
-		dm.insert(pair<double, vector<double>>(distance(element.first, test, test.size()), element.first)); 
+		//dm.insert(pair<double, vector<double>>(distance(element.first, test, test.size()), element.first));
+		distances.push_back(distance(element.first, test, test.size())); 
 	}
-	int count=0;//count to compare to k
-	for ( auto element : dm){//goes through in order of closest to furthest
-		vector<double> v = element.second;
-		if(v!=test){//checks for repeats
-			new_map.insert(pair<vector<double>,string>(element.second,map_copy[v]));//adds closest pairs
-			count+=1;//adds to count 
-		}
-		if (count==k){//stops when k amount has been added
-			break;
+
+	sort(distances.begin(), distances.end());
+	
+	for ( int i=1; i<=k; i++){//goes through in order of closest to furthest
+		for (auto element : map_copy){
+			if (distance(element.first, test, test.size())==distances[i]){
+				new_map.insert(pair<vector<double>,string>(element.first,map_copy[element.first]));//adds closest pairs
+				auto it= *element;
+				map_copy.erase(it);
+			}
 		}
 	}
 	return new_map;
