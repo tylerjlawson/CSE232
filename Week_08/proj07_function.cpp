@@ -90,11 +90,9 @@ map<vector<double>, string> k_neighbors(const map<vector<double>, string> &m, co
 	sort(distances.begin(), distances.end());
 	
 	for ( int i=1; i<=k; i++){//goes through in order of closest to furthest
-		for (auto element : map_copy){
+		for (auto element : m){
 			if (distance(element.first, test, test.size())==distances[i]){
 				new_map.insert(pair<vector<double>,string>(element.first,map_copy[element.first]));//adds closest pairs
-				auto it= *element;
-				map_copy.erase(it);
 			}
 		}
 	}
